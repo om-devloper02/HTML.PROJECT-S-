@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Calculator App</title>
+    <meta name="description" content="A web-based calculator application that performs basic arithmetic operations with a clean, iOS/Google-inspired interface." />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="calculator-container">
+      <div class="calculator">
+        <!-- History Toggle Button -->
+        <div class="history-toggle">
+          <button id="historyToggleBtn" class="toggle-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="history-icon">
+              <path d="M12 8v4l3 3"></path>
+              <circle cx="12" cy="12" r="10"></circle>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- History Panel -->
+        <div id="historyPanel" class="history-panel">
+          <div class="no-history">No calculation history yet</div>
+          <div id="historyList" class="history-list"></div>
+        </div>
+        
+        <!-- Calculator Display -->
+        <div class="calculator-display">
+          <div id="previousInput" class="previous-input"></div>
+          <div id="currentInput" class="current-input">0</div>
+        </div>
+        
+        <!-- Calculator Buttons -->
+        <div class="calculator-buttons">
+          <!-- Row 1 -->
+          <button class="button function-btn" data-action="clear">AC</button>
+          <button class="button function-btn" data-action="toggleSign">+/-</button>
+          <button class="button function-btn" data-action="percentage">%</button>
+          <button class="button operation-btn" data-operation="divide">÷</button>
+          
+          <!-- Row 2 -->
+          <button class="button number-btn" data-number="7">7</button>
+          <button class="button number-btn" data-number="8">8</button>
+          <button class="button number-btn" data-number="9">9</button>
+          <button class="button operation-btn" data-operation="multiply">×</button>
+          
+          <!-- Row 3 -->
+          <button class="button number-btn" data-number="4">4</button>
+          <button class="button number-btn" data-number="5">5</button>
+          <button class="button number-btn" data-number="6">6</button>
+          <button class="button operation-btn" data-operation="subtract">−</button>
+          
+          <!-- Row 4 -->
+          <button class="button number-btn" data-number="1">1</button>
+          <button class="button number-btn" data-number="2">2</button>
+          <button class="button number-btn" data-number="3">3</button>
+          <button class="button operation-btn" data-operation="add">+</button>
+          
+          <!-- Row 5 -->
+          <button class="button number-btn zero-btn" data-number="0">0</button>
+          <button class="button number-btn" data-number=".">.</button>
+          <button class="button operation-btn" data-operation="equals">=</button>
+        </div>
+      </div>
+    </div>
+    
+    <script src="script.js"></script>
+  </body>
+</html>

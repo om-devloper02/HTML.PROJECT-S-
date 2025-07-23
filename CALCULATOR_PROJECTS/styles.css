@@ -1,0 +1,188 @@
+/* Variables */
+:root {
+  --primary: #F0F0F0; /* Light grey */
+  --secondary: #FF9500; /* Orange */
+  --background: #FFFFFF; /* White */
+  --text: #333333; /* Dark grey */
+  --button-hover: #E8E8E8; /* Hover grey */
+}
+
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+/* Calculator Container */
+.calculator-container {
+  max-width: 400px;
+  width: 100%;
+}
+
+.calculator {
+  background-color: var(--background);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* History Toggle */
+.history-toggle {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: #6b7280;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.toggle-btn:hover {
+  color: #374151;
+}
+
+/* History Panel */
+.history-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.history-panel.open {
+  max-height: 256px;
+  overflow-y: auto;
+}
+
+.no-history {
+  padding: 1rem;
+  text-align: center;
+  color: #6b7280;
+  display: none;
+}
+
+.history-item {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.history-calculation {
+  text-align: right;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.history-result {
+  text-align: right;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 500;
+}
+
+/* Calculator Display */
+.calculator-display {
+  padding: 1rem 1rem 0;
+}
+
+.previous-input {
+  text-align: right;
+  padding: 0.5rem 0;
+  height: 2rem;
+  color: #6b7280;
+  font-size: 1.125rem;
+}
+
+.current-input {
+  text-align: right;
+  padding: 0.5rem 0;
+  height: 4rem;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 2.5rem;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Calculator Buttons */
+.calculator-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.button {
+  height: 4rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1.25rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.button:active {
+  transform: scale(0.95);
+}
+
+.function-btn {
+  background-color: #e5e7eb;
+}
+
+.function-btn:hover {
+  background-color: var(--button-hover);
+}
+
+.number-btn {
+  background-color: var(--primary);
+  font-family: 'Roboto Mono', monospace;
+}
+
+.number-btn:hover {
+  background-color: var(--button-hover);
+}
+
+.operation-btn {
+  background-color: var(--secondary);
+  color: white;
+}
+
+.operation-btn:hover {
+  opacity: 0.9;
+}
+
+.zero-btn {
+  grid-column: span 2;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .calculator-buttons {
+    gap: 0.5rem;
+  }
+  
+  .button {
+    height: 3.5rem;
+  }
+  
+  .current-input {
+    font-size: 2rem;
+  }
+}
