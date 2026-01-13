@@ -1,0 +1,270 @@
+/* Variables */
+:root {
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+    --accent-color: #00c6ff;
+    --dark-bg: #1e1e2f;
+    --card-bg: #2c2c44;
+    --text-light: #ffffff;
+    --text-gray: #b8b8d1;
+    --success: #10b981;
+    --radius: 10px;
+}
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: var(--text-light);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* Header */
+header {
+    text-align: center;
+    padding: 30px 20px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    color: var(--text-gray);
+    font-size: 1.1rem;
+}
+
+/* Container */
+.container {
+    max-width: 900px;
+    background: var(--dark-bg);
+    padding: 30px;
+    margin: 40px auto;
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Name Input */
+.name-section {
+    margin-bottom: 30px;
+}
+
+.name-input {
+    width: 100%;
+    padding: 15px;
+    background: var(--card-bg);
+    border: 2px solid transparent;
+    border-radius: var(--radius);
+    color: var(--text-light);
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.name-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+/* Skills Section */
+.skills-section h2 {
+    color: var(--text-light);
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+}
+
+/* Category */
+.category {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    border-left: 4px solid var(--accent-color);
+}
+
+.category h3 {
+    color: var(--accent-color);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+/* Skills Grid */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.skill-item {
+    background: var(--card-bg);
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.skill-item:hover {
+    background: rgba(0, 198, 255, 0.1);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+.skill-item input[type="checkbox"] {
+    margin-right: 10px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+.skill-item input[type="checkbox"]:checked + span {
+    font-weight: bold;
+}
+
+/* Suggest Button */
+.suggest-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--accent-color) 0%, #0072ff 100%);
+    border: none;
+    border-radius: var(--radius);
+    color: var(--text-light);
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: all 0.3s ease;
+}
+
+.suggest-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 198, 255, 0.4);
+}
+
+/* Result Section */
+.result {
+    margin-top: 30px;
+    padding: 25px;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    display: none;
+}
+
+.result.show {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result h3 {
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+}
+
+.result .greeting {
+    color: var(--text-gray);
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.career-card {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--success);
+}
+
+.career-card h4 {
+    color: var(--text-light);
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+}
+
+.career-card p {
+    color: var(--text-gray);
+    margin-bottom: 10px;
+}
+
+.career-card .salary {
+    color: var(--success);
+    font-weight: bold;
+}
+
+.career-card .match {
+    display: inline-block;
+    background: var(--success);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.no-match {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-gray);
+}
+
+/* Footer Links */
+.footer-links {
+    margin-top: 30px;
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--card-bg);
+}
+
+.footer-links a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-gray);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .container {
+        margin: 20px 10px;
+        padding: 20px;
+    }
+
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+}
