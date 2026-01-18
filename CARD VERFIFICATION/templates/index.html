@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Card Verification System{% endblock %}
+
+{% block content %}
+<div class="card-box">
+    <div class="header">
+        <h1>💳 Card Verification System</h1>
+    </div>
+    <p class="subtitle">Educational Purpose Only - Luhn Algorithm Validation</p>
+    
+    <div class="form-group">
+        <label for="cardNumber">Card Number:</label>
+        <input 
+            type="text" 
+            id="cardNumber" 
+            placeholder="Enter 13-19 digit card number"
+            maxlength="19"
+        >
+        <small id="cardLength" style="color: #667eea; margin-top: 5px;"></small>
+    </div>
+    
+    <div class="button-group">
+        <button id="verifyBtn" onclick="verifyCard()">Verify Card</button>
+        <button id="exportBtn" onclick="exportCSV()" class="export-btn">📥 Export</button>
+    </div>
+    
+    <div id="result" class="result hidden">
+        <p id="resultText"></p>
+        <div id="details" class="details"></div>
+    </div>
+    
+    <div id="statsBox" class="stats-box hidden">
+        <h3>📊 Quick Stats:</h3>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-label">Total</span>
+                <span class="stat-value" id="totalStat">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Valid</span>
+                <span class="stat-value valid-stat" id="validStat">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Invalid</span>
+                <span class="stat-value invalid-stat" id="invalidStat">0</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="info-box">
+        <h3>📝 Test Card Numbers:</h3>
+        <h4 style="color: #667eea; margin-top: 10px;">🇮🇳 Indian Banks:</h4>
+        <ul>
+            <li><strong>SBI:</strong> 5062901234567890</li>
+            <li><strong>Kotak:</strong> 5052901234567890</li>
+            <li><strong>Central Bank:</strong> 5042901234567890</li>
+            <li><strong>RBI:</strong> 5072901234567890</li>
+            <li><strong>HDFC:</strong> 4532015112830366</li>
+        </ul>
+        <h4 style="color: #667eea; margin-top: 10px;">🌍 International:</h4>
+        <ul>
+            <li><strong>Visa:</strong> 4532015112830366</li>
+            <li><strong>Discover:</strong> 6011111111111117</li>
+            <li><strong>Invalid:</strong> 1234567890123456</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    function verifyCard() {
+        const cardNumber = document.getElementById('cardNumber').value.trim();
+        const resultDiv = document.getElementById('result');
+        const resultText = document.getElementById('resultText');
+        const details = document.getElementById('details');
+        
+        if (!cardNumber) {
+            resultText.textContent = '⚠️ Please enter a card number';
+            resultDiv.classList.remove('hidden');
+            return;
+        }
+        
+        fetch('/verify', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                card_number: cardNumber
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            resultText.textContent = data.status;
+            details.innerHTML = `
+                <p><strong>🏦 Bank:</strong> ${data.bank_name}</p>
+                <p><strong>💳 Card Type:</strong> ${data.card_type}</p>
+                <p><strong>📏 Length:</strong> ${data.card_length} digits</p>
+                <p><strong>Luhn Check:</strong> ${data.luhn_check}</p>
+            `;
+            resultDiv.classList.remove('hidden');
+            
+            if (data.status.includes('Valid')) {
+                resultDiv.classList.add('valid');
+                resultDiv.classList.remove('invalid');
+            } else {
+                resultDiv.classList.add('invalid');
+                resultDiv.classList.remove('valid');
+            }
+            
+            loadStats();
+        })
+        .catch(error => {
+            resultText.textContent = '❌ Error: ' + error.message;
+            resultDiv.classList.remove('hidden');
+            resultDiv.classList.add('invalid');
+        });
+    }
+    
+    function loadStats() {
+        fetch('/stats')
+        .then(response => response.json())
+        .then(data => {
+            const statsBox = document.getElementById('statsBox');
+            if (data.total > 0) {
+                statsBox.classList.remove('hidden');
+                document.getElementById('totalStat').textContent = data.total;
+                document.getElementById('validStat').textContent = data.valid;
+                document.getElementById('invalidStat').textContent = data.invalid;
+            }
+        });
+    }
+    
+    function exportCSV() {
+        fetch('/export')
+        .then(response => {
+            if (!response.ok) throw new Error('No data to export');
+            return response.blob();
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `card_verification_${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        })
+        .catch(error => alert('Error: ' + error.message));
+    }
+    
+    document.getElementById('cardNumber').addEventListener('input', function() {
+        const length = this.value.replace(/\D/g, '').length;
+        document.getElementById('cardLength').textContent = length > 0 ? `${length} digits` : '';
+    });
+    
+    document.getElementById('cardNumber').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') verifyCard();
+    });
+    
+    window.addEventListener('load', function() {
+        loadStats();
+    });
+</script>
+{% endblock %}

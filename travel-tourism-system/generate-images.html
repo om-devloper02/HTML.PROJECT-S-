@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generate Placeholder Images</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Generate Placeholder Images</h1>
+    <p>Click the button below to generate placeholder PNG images for all destinations.</p>
+    <button onclick="generateImages()">Generate All Images</button>
+    <div id="status"></div>
+
+    <script>
+        function generateImages() {
+            const destinations = [
+                { name: 'manali', color: '#8B7355', text: 'Manali' },
+                { name: 'goa', color: '#FFD700', text: 'Goa' },
+                { name: 'jaipur', color: '#FF69B4', text: 'Jaipur' },
+                { name: 'darjeeling', color: '#228B22', text: 'Darjeeling' },
+                { name: 'jaisalmer', color: '#DAA520', text: 'Jaisalmer' },
+                { name: 'kerala', color: '#20B2AA', text: 'Kerala' },
+                { name: 'shimla', color: '#87CEEB', text: 'Shimla' },
+                { name: 'udaipur', color: '#9370DB', text: 'Udaipur' }
+            ];
+
+            const status = document.getElementById('status');
+            status.innerHTML = '<p>Generating images...</p>';
+
+            destinations.forEach(dest => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 500;
+                canvas.height = 300;
+                const ctx = canvas.getContext('2d');
+
+                // Background
+                ctx.fillStyle = dest.color;
+                ctx.fillRect(0, 0, 500, 300);
+
+                // Text
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 48px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(dest.text, 250, 150);
+
+                // Download
+                canvas.toBlob(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${dest.name}.png`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                });
+            });
+
+            status.innerHTML += '<p class="success">✓ Images generated! Check your downloads folder.</p>';
+            status.innerHTML += '<p>Move all PNG files to the <strong>images/</strong> folder in your project.</p>';
+        }
+    </script>
+</body>
+</html>

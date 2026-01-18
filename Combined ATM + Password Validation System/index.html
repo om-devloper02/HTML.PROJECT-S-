@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM Machine</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Card Reading Screen -->
+        <div id="cardReadingScreen" class="screen active">
+            <div class="atm-card">
+                <div class="card-header">
+                    <h1>🏦 ATM Machine</h1>
+                </div>
+                <div class="card-body">
+                    <div class="loading-animation">
+                        <div class="card-slot"></div>
+                        <p id="cardMessage">Welcome to ATM Machine</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Screen -->
+        <div id="loginScreen" class="screen">
+            <div class="atm-card">
+                <div class="card-header">
+                    <h1>🏦 ATM Login</h1>
+                </div>
+                <div class="card-body">
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="accountNumber">Account Number</label>
+                            <input type="text" id="accountNumber" class="input-field" placeholder="Enter account number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="password-container">
+                                <input type="password" id="password" class="input-field" placeholder="Enter password" required>
+                                <button type="button" id="togglePassword" class="toggle-btn">👁️</button>
+                            </div>
+                        </div>
+                        <div id="loginError" class="error-message"></div>
+                        <div id="attemptsRemaining" class="attempts-message"></div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ATM Menu Screen -->
+        <div id="atmMenuScreen" class="screen">
+            <div class="atm-card">
+                <div class="card-header">
+                    <h1>🏦 ATM Menu</h1>
+                    <p class="welcome-text">Welcome, <span id="accountDisplay"></span></p>
+                    <div class="header-controls">
+                        <button id="themeToggle" class="icon-btn" title="Toggle Dark Mode">🌙</button>
+                        <button id="soundToggle" class="icon-btn" title="Toggle Sound">🔊</button>
+                        <div id="sessionTimer" class="session-timer">⏱️ <span id="timerDisplay">5:00</span></div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="menu-grid">
+                        <button class="menu-btn" data-action="balance">
+                            <span class="menu-icon">💰</span>
+                            <span class="menu-text">Check Balance</span>
+                        </button>
+                        <button class="menu-btn" data-action="withdraw">
+                            <span class="menu-icon">💸</span>
+                            <span class="menu-text">Withdraw Cash</span>
+                        </button>
+                        <button class="menu-btn" data-action="deposit">
+                            <span class="menu-icon">💵</span>
+                            <span class="menu-text">Deposit Cash</span>
+                        </button>
+                        <button class="menu-btn" data-action="fastcash">
+                            <span class="menu-icon">⚡</span>
+                            <span class="menu-text">Fast Cash</span>
+                        </button>
+                        <button class="menu-btn" data-action="history">
+                            <span class="menu-icon">📜</span>
+                            <span class="menu-text">Transaction History</span>
+                        </button>
+                        <button class="menu-btn" data-action="exit">
+                            <span class="menu-icon">🚪</span>
+                            <span class="menu-text">Exit</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction Screen -->
+        <div id="transactionScreen" class="screen">
+            <div class="atm-card">
+                <div class="card-header">
+                    <h1 id="transactionTitle">Transaction</h1>
+                </div>
+                <div class="card-body">
+                    <div id="transactionContent"></div>
+                    <div class="button-group">
+                        <button id="confirmTransaction" class="btn btn-primary">Confirm</button>
+                        <button id="cancelTransaction" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Receipt Screen -->
+        <div id="receiptScreen" class="screen">
+            <div class="atm-card">
+                <div class="card-header">
+                    <h1>📄 Receipt</h1>
+                </div>
+                <div class="card-body">
+                    <div id="receiptContent" class="receipt"></div>
+                    <div class="button-group">
+                        <button id="printReceipt" class="btn btn-primary">Print Receipt</button>
+                        <button id="backToMenu" class="btn btn-secondary">Back to Menu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fast Cash Screen -->
+        <div id="fastCashScreen" class="screen">
+            <div class="atm-card">
+                <div class="card-header">
+                    <h1>⚡ Fast Cash</h1>
+                </div>
+                <div class="card-body">
+                    <div class="transaction-info">
+                        <p>Current Balance: $<span id="fastCashBalance">0.00</span></p>
+                        <p class="info-text">Select an amount for quick withdrawal:</p>
+                    </div>
+                    <div class="fast-cash-grid">
+                        <button class="fast-cash-btn" data-amount="20">$20</button>
+                        <button class="fast-cash-btn" data-amount="50">$50</button>
+                        <button class="fast-cash-btn" data-amount="100">$100</button>
+                        <button class="fast-cash-btn" data-amount="200">$200</button>
+                        <button class="fast-cash-btn" data-amount="500">$500</button>
+                        <button class="fast-cash-btn" data-amount="1000">$1000</button>
+                    </div>
+                    <button id="backFromFastCash" class="btn btn-secondary" style="margin-top: 1rem;">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction History Screen -->
+        <div id="historyScreen" class="screen">
+            <div class="atm-card">
+                <div class="card-header">
+                    <h1>📜 Transaction History</h1>
+                </div>
+                <div class="card-body">
+                    <div id="historyContent" class="history-content">
+                        <!-- Transaction history will be populated here -->
+                    </div>
+                    <button id="backFromHistory" class="btn btn-secondary">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exit Screen -->
+        <div id="exitScreen" class="screen">
+            <div class="atm-card">
+                <div class="card-header">
+                    <h1>👋 Thank You</h1>
+                </div>
+                <div class="card-body">
+                    <div class="exit-message">
+                        <p class="large-text">Thank you for using our ATM!</p>
+                        <p id="exitMessage">Please take your card...</p>
+                        <div class="loading-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Locked Screen -->
+        <div id="lockedScreen" class="screen">
+            <div class="atm-card">
+                <div class="card-header error-header">
+                    <h1>🔒 Account Locked</h1>
+                </div>
+                <div class="card-body">
+                    <div class="error-content">
+                        <p class="large-text">Your account has been locked</p>
+                        <p>Too many incorrect password attempts.</p>
+                        <p>Please visit your home branch or contact customer support to unlock your account.</p>
+                        <button id="backToStart" class="btn btn-primary">Back to Start</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <!-- Audio Elements for Sound Effects -->
+    <audio id="clickSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRhYAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQIAAACA" type="audio/wav">
+    </audio>
+    <audio id="successSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRhYAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQIAAACA" type="audio/wav">
+    </audio>
+</body>
+</html>

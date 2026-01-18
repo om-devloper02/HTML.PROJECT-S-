@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics - Card Verification System{% endblock %}
+
+{% block content %}
+<div class="card-box">
+    <div class="header">
+        <h1>📊 Analytics & Statistics</h1>
+    </div>
+    <p class="subtitle">Detailed verification insights</p>
+    
+    <div class="stats-grid-large">
+        <div class="stat-card">
+            <div class="stat-icon">📈</div>
+            <div class="stat-content">
+                <div class="stat-label">Total Verifications</div>
+                <div class="stat-value" id="totalVerifications">0</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-content">
+                <div class="stat-label">Valid Cards</div>
+                <div class="stat-value valid-stat" id="validCards">0</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">❌</div>
+            <div class="stat-content">
+                <div class="stat-label">Invalid Cards</div>
+                <div class="stat-value invalid-stat" id="invalidCards">0</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+                <div class="stat-label">Success Rate</div>
+                <div class="stat-value" id="successRate">0%</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="analytics-section">
+        <h3>💳 Card Types Distribution</h3>
+        <div id="cardTypeStats" class="distribution-list"></div>
+    </div>
+    
+    <div class="analytics-section">
+        <h3>🏦 Bank Distribution</h3>
+        <div id="bankStats" class="distribution-list"></div>
+    </div>
+    
+    <div class="analytics-section">
+        <h3>📅 Verification Timeline</h3>
+        <div id="timelineStats" class="distribution-list"></div>
+    </div>
+</div>
+
+<script>
+    function loadAnalytics() {
+        fetch('/analytics')
+        .then(response => response.json())
+        .then(data => {
+            // Update main stats
+            document.getElementById('totalVerifications').textContent = data.total;
+            document.getElementById('validCards').textContent = data.valid;
+            document.getElementById('invalidCards').textContent = data.invalid;
+            document.getElementById('successRate').textContent = data.success_rate + '%';
+            
+            // Card types
+            const cardTypeHtml = Object.entries(data.card_types)
+                .sort((a, b) => b[1] - a[1])
+                .map(([type, count]) => `
+                    <div class="distribution-item">
+                        <span class="dist-label">${type}</span>
+                        <div class="dist-bar">
+                            <div class="dist-fill" style="width: ${(count/data.total)*100}%"></div>
+                        </div>
+                        <span class="dist-count">${count}</span>
+                    </div>
+                `).join('');
+            document.getElementById('cardTypeStats').innerHTML = cardTypeHtml || '<p>No data</p>';
+            
+            // Banks
+            const bankHtml = Object.entries(data.banks)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10)
+                .map(([bank, count]) => `
+                    <div class="distribution-item">
+                        <span class="dist-label">${bank}</span>
+                        <div class="dist-bar">
+                            <div class="dist-fill" style="width: ${(count/data.total)*100}%"></div>
+                        </div>
+                        <span class="dist-count">${count}</span>
+                    </div>
+                `).join('');
+            document.getElementById('bankStats').innerHTML = bankHtml || '<p>No data</p>';
+            
+            // Timeline
+            const timelineHtml = Object.entries(data.timeline)
+                .sort()
+                .reverse()
+                .slice(0, 7)
+                .map(([date, count]) => `
+                    <div class="distribution-item">
+                        <span class="dist-label">${date}</span>
+                        <div class="dist-bar">
+                            <div class="dist-fill" style="width: ${(count/Math.max(...Object.values(data.timeline)))*100}%"></div>
+                        </div>
+                        <span class="dist-count">${count}</span>
+                    </div>
+                `).join('');
+            document.getElementById('timelineStats').innerHTML = timelineHtml || '<p>No data</p>';
+        })
+        .catch(error => console.error('Error loading analytics:', error));
+    }
+    
+    window.addEventListener('load', loadAnalytics);
+</script>
+{% endblock %}

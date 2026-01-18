@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram QR Code Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram Logo" class="insta-logo">
+    <h1>Instagram QR Code Generator</h1>
+    <form id="qrForm">
+        <label for="username">Instagram Username:</label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Generate QR Code</button>
+    </form>
+    <canvas id="qrCode"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

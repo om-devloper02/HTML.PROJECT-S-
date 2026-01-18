@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel & Tourism Recommendation System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">✈️ TravelHub</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showPage('home')">Home</a></li>
+                <li><a href="#" onclick="showPage('destinations')">Destinations</a></li>
+                <li><a href="#" onclick="showPage('bookings')">My Bookings</a></li>
+                <li><a href="#" onclick="showPage('reviews')">Reviews</a></li>
+                <li><a href="#" onclick="showPage('admin')" id="adminBtn" style="display:none;">Admin</a></li>
+                <li><a href="#" onclick="logout()" id="logoutBtn" style="display:none;">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Auth Pages -->
+        <div id="auth-page" class="page active">
+            <div class="auth-container">
+                <div class="auth-box">
+                    <h1>Welcome to TravelHub</h1>
+                    <p>Your Personal Travel Recommendation System</p>
+                    
+                    <div class="auth-tabs">
+                        <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                        <button class="tab-btn" onclick="switchTab('register')">Register</button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="login-form" class="auth-form active">
+                        <input type="email" placeholder="Email" id="loginEmail" required>
+                        <input type="password" placeholder="Password" id="loginPassword" required>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <p class="demo-hint">Demo: user@example.com / password123</p>
+                    </form>
+
+                    <!-- Register Form -->
+                    <form id="register-form" class="auth-form">
+                        <input type="text" placeholder="Full Name" id="regName" required>
+                        <input type="email" placeholder="Email" id="regEmail" required>
+                        <input type="password" placeholder="Password" id="regPassword" required>
+                        <input type="tel" placeholder="Phone" id="regPhone" required>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Page -->
+        <div id="home-page" class="page">
+            <div class="hero">
+                <h1>Find Your Perfect Destination</h1>
+                <p>Get personalized travel recommendations based on your preferences</p>
+                <button class="btn btn-primary btn-large" onclick="showPage('preferences')">Get Recommendations</button>
+            </div>
+
+            <div class="featured-section">
+                <h2>Featured Destinations</h2>
+                <div class="destinations-grid" id="featured-destinations"></div>
+            </div>
+        </div>
+
+        <!-- Preferences Form Page -->
+        <div id="preferences-page" class="page">
+            <div class="form-container">
+                <h2>Tell Us Your Preferences</h2>
+                <form id="preferences-form">
+                    <div class="form-group">
+                        <label>Budget Range (per person)</label>
+                        <select id="budget" required>
+                            <option value="">Select Budget</option>
+                            <option value="budget">Budget (₹10,000 - ₹30,000)</option>
+                            <option value="mid">Mid-range (₹30,000 - ₹75,000)</option>
+                            <option value="luxury">Luxury (₹75,000+)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Preferred Season</label>
+                        <select id="season" required>
+                            <option value="">Select Season</option>
+                            <option value="summer">Summer (Mar-May)</option>
+                            <option value="monsoon">Monsoon (Jun-Sep)</option>
+                            <option value="winter">Winter (Oct-Feb)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Travel Type</label>
+                        <select id="travelType" required>
+                            <option value="">Select Type</option>
+                            <option value="adventure">Adventure</option>
+                            <option value="family">Family</option>
+                            <option value="honeymoon">Honeymoon</option>
+                            <option value="cultural">Cultural</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Location Preference</label>
+                        <select id="location" required>
+                            <option value="">Select Location</option>
+                            <option value="mountains">Mountains</option>
+                            <option value="beach">Beach</option>
+                            <option value="city">City</option>
+                            <option value="desert">Desert</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Get Recommendations</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Destinations Page -->
+        <div id="destinations-page" class="page">
+            <h2>Travel Destinations</h2>
+            
+            <div class="filter-section">
+                <h3>Filter Destinations</h3>
+                <div class="filter-group">
+                    <select id="filterBudget" onchange="applyFilters()">
+                        <option value="">All Budgets</option>
+                        <option value="budget">Budget</option>
+                        <option value="mid">Mid-range</option>
+                        <option value="luxury">Luxury</option>
+                    </select>
+
+                    <select id="filterSeason" onchange="applyFilters()">
+                        <option value="">All Seasons</option>
+                        <option value="summer">Summer</option>
+                        <option value="monsoon">Monsoon</option>
+                        <option value="winter">Winter</option>
+                    </select>
+
+                    <select id="filterLocation" onchange="applyFilters()">
+                        <option value="">All Locations</option>
+                        <option value="mountains">Mountains</option>
+                        <option value="beach">Beach</option>
+                        <option value="city">City</option>
+                        <option value="desert">Desert</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="destinations-grid" id="destinations-list"></div>
+        </div>
+
+        <!-- Destination Details Modal -->
+        <div id="destination-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div id="modal-body"></div>
+            </div>
+        </div>
+
+        <!-- Bookings Page -->
+        <div id="bookings-page" class="page">
+            <h2>My Bookings</h2>
+            <div id="bookings-list" class="bookings-container"></div>
+        </div>
+
+        <!-- Reviews Page -->
+        <div id="reviews-page" class="page">
+            <h2>Destination Reviews</h2>
+            
+            <div class="review-form">
+                <h3>Leave a Review</h3>
+                <form id="review-form">
+                    <select id="reviewDestination" required>
+                        <option value="">Select Destination</option>
+                    </select>
+                    <input type="text" placeholder="Your Name" id="reviewName" required>
+                    <textarea placeholder="Your Review" id="reviewText" required></textarea>
+                    <div class="rating">
+                        <label>Rating:</label>
+                        <select id="reviewRating" required>
+                            <option value="">Select Rating</option>
+                            <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                            <option value="4">⭐⭐⭐⭐ Good</option>
+                            <option value="3">⭐⭐⭐ Average</option>
+                            <option value="2">⭐⭐ Poor</option>
+                            <option value="1">⭐ Very Poor</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+
+            <div id="reviews-list" class="reviews-container"></div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="admin-page" class="page">
+            <h2>Admin Dashboard</h2>
+            <div class="admin-container">
+                <div class="admin-card">
+                    <h3>Total Users</h3>
+                    <p id="totalUsers" class="stat">0</p>
+                </div>
+                <div class="admin-card">
+                    <h3>Total Bookings</h3>
+                    <p id="totalBookings" class="stat">0</p>
+                </div>
+                <div class="admin-card">
+                    <h3>Total Reviews</h3>
+                    <p id="totalReviews" class="stat">0</p>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h3>All Users</h3>
+                <div id="usersList" class="users-table"></div>
+            </div>
+
+            <div class="admin-section">
+                <h3>All Bookings</h3>
+                <div id="bookingsList" class="bookings-table"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 TravelHub - Travel & Tourism Recommendation System | College Project</p>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

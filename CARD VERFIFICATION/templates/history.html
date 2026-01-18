@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}History - Card Verification System{% endblock %}
+
+{% block content %}
+<div class="card-box">
+    <div class="header">
+        <h1>📋 Verification History</h1>
+    </div>
+    <p class="subtitle">All card verification records</p>
+    
+    <div class="button-group">
+        <button onclick="clearHistory()" class="danger-btn">🗑️ Clear History</button>
+        <button onclick="exportCSV()" class="export-btn">📥 Export CSV</button>
+    </div>
+    
+    <div id="historyContainer" class="history-container">
+        <div class="loading">Loading history...</div>
+    </div>
+</div>
+
+<script>
+    function loadHistory() {
+        fetch('/history')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('historyContainer');
+            
+            if (!data.history || data.history.length === 0) {
+                container.innerHTML = '<div class="empty-state">📭 No verification history yet</div>';
+                return;
+            }
+            
+            const html = `
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Bank Name</th>
+                            <th>Card Type</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.history.map(item => `
+                            <tr class="${item.status.includes('Valid') ? 'valid-row' : 'invalid-row'}">
+                                <td>${item.date}</td>
+                                <td>${item.time}</td>
+                                <td>${item.bank_name}</td>
+                                <td>${item.card_type}</td>
+                                <td><span class="status-badge">${item.status}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            container.innerHTML = html;
+        })
+        .catch(error => {
+            document.getElementById('historyContainer').innerHTML = `<div class="error">Error loading history: ${error.message}</div>`;
+        });
+    }
+    
+    function clearHistory() {
+        if (confirm('Are you sure you want to clear all history?')) {
+            fetch('/clear-history', {method: 'POST'})
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                loadHistory();
+            })
+            .catch(error => alert('Error: ' + error.message));
+        }
+    }
+    
+    function exportCSV() {
+        fetch('/export')
+        .then(response => {
+            if (!response.ok) throw new Error('No data to export');
+            return response.blob();
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `card_verification_${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        })
+        .catch(error => alert('Error: ' + error.message));
+    }
+    
+    window.addEventListener('load', loadHistory);
+</script>
+{% endblock %}
