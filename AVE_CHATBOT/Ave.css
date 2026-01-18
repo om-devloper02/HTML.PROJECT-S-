@@ -1,0 +1,95 @@
+body {
+    font-family: 'Baloo Bhai', cursive;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e1c1c 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: #ffffff;
+}
+
+
+.chat-container {
+    width: 50%;
+    max-width: 600px;
+    background-color: #ffffff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-box {
+    flex: 400px;
+    padding: 70px;
+    overflow-y: auto;
+    background: #f4f4f4;
+    color: black;
+    background-image: url(chatbotimg.jpeg);
+    background-position: center;
+    background-size: 700px;
+}
+
+.Bottom {
+    color: rgb(18, 97, 128);
+    text-align: center;
+    background-color: #ffffff;
+    cursor: pointer;
+    border-radius: 3%;
+    /* border: 2px solid #f10000; */
+}
+
+.Bottom:hover{
+    background-color: #bed4d6;
+}
+
+.input-container {
+    display: flex;
+    border-top: 1px solid #ddd;
+}
+
+.user-input {
+    flex: 1;
+    padding: 10px;
+    /* border: solid 1px yellow; */
+    box-sizing: border-box;
+}
+
+.send-btn {
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.send-btn:hover {
+    background-color: #0056b3;
+}
+
+.message {
+    margin: 10px 0;
+}
+
+.message.user {
+    text-align: right;
+}
+
+.message.bot {
+    text-align: left;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .chat-container {
+        width: 100%;
+        margin: 10px;
+    }
+
+    .user-input, .send-btn {
+        padding: 8px;
+    }
+}

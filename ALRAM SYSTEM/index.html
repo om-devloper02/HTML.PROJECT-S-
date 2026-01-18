@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connectin Whizttech Alarm</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --text-color: #ffffff;
+      --accent: #3b82f6;
+      --highlight: #facc15;
+    }
+
+    body.light-mode {
+      --bg-color: #f9fafb;
+      --text-color: #0f172a;
+      --accent: #2563eb;
+      --highlight: #3b82f6;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      transition: all 0.3s ease;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: var(--highlight);
+      animation: slideIn 1s ease forwards;
+    }
+
+    .clock {
+      font-size: 3rem;
+      margin: 20px 0;
+      color: var(--accent);
+      animation: fadeIn 2s ease;
+    }
+
+    .alarm-setter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="time"],
+    input[type="text"] {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 2px solid var(--accent);
+      width: 220px;
+    }
+
+    button {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background-color: var(--highlight);
+      color: black;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-style: italic;
+      color: var(--highlight);
+    }
+
+    .controls {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    #themeToggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: var(--accent);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+
+    audio {
+      display: none;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <button id="themeToggle">🌗 Toggle Theme</button>
+
+  <h1>🔔 Connectin Whizttech Alarm</h1>
+  <div class="clock" id="currentTime">--:--:--</div>
+
+  <div class="alarm-setter">
+    <input type="time" id="alarmTime" />
+    <input type="text" id="alarmNote" placeholder="Enter alarm note (e.g., Meeting)" />
+    <button onclick="setAlarm()">Set Alarm</button>
+    <div class="status" id="alarmStatus">No alarm set.</div>
+    <div class="controls">
+      <button id="snoozeBtn" style="display:none;" onclick="snoozeAlarm()">🕓 Snooze 5 Min</button>
+      <button id="stopBtn" style="display:none;" onclick="stopAlarm()">✖ Stop</button>
+    </div>
+  </div>
+
+  <div id="math-problem-container" style="display: none; margin-top: 20px; text-align: center;">
+    <p id="math-problem" style="font-size: 1.2em; color: var(--highlight);"></p>
+    <input type="text" id="math-answer" placeholder="Your Answer" style="margin-bottom: 10px;">
+    <button onclick="checkAnswer()">Submit</button>
+  </div>
+
+  <audio id="alarmSound" src="http://soundbible.com/grab.php?id=2061&type=mp3" preload="auto"></audio>
+
+  <footer>&copy; 2025 Connectin Whizttech</footer>
+
+  <script>
+    const currentTimeDisplay = document.getElementById("currentTime");
+    const alarmStatus = document.getElementById("alarmStatus");
+    const alarmSound = document.getElementById("alarmSound");
+    const snoozeBtn = document.getElementById("snoozeBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const themeToggle = document.getElementById("themeToggle");
+    const mathProblemContainer = document.getElementById('math-problem-container');
+    const mathProblem = document.getElementById('math-problem');
+    const mathAnswer = document.getElementById('math-answer');
+
+    let alarmTime = null;
+    let alarmNote = "";
+    let alarmTimeout;
+    let correctAnswer;
+
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const currentTime = `${hours}:${minutes}:${seconds}`;
+      currentTimeDisplay.textContent = currentTime;
+
+      if (alarmTime === `${hours}:${minutes}` && seconds === "00") {
+        triggerAlarm();
+      }
+    }
+
+    function setAlarm() {
+      const timeInput = document.getElementById("alarmTime").value;
+      alarmNote = document.getElementById("alarmNote").value || "Alarm";
+
+      if (timeInput) {
+        alarmTime = timeInput;
+        alarmStatus.textContent = `✅ ${alarmNote} set for ${alarmTime}`;
+      } else {
+        alarmStatus.textContent = "❌ Please select a valid time.";
+      }
+    }
+
+    function triggerAlarm() {
+      alarmSound.play();
+      alarmStatus.textContent = `⏰ ${alarmNote} - Solve the math problem to stop!`;
+      snoozeBtn.style.display = "inline-block";
+      stopBtn.style.display = "none";
+      mathProblemContainer.style.display = 'block';
+      generateMathProblem();
+    }
+
+    function generateMathProblem() {
+        let num1 = Math.floor(Math.random() * 10) + 1;
+        let num2 = Math.floor(Math.random() * 10) + 1;
+        const operators = ['+', '-', '*'];
+        const operator = operators[Math.floor(Math.random() * operators.length)];
+
+        if (operator === '-' && num1 < num2) {
+            // Swap to avoid negative answers
+            [num1, num2] = [num2, num1];
+        }
+
+        switch (operator) {
+            case '+':
+                correctAnswer = num1 + num2;
+                break;
+            case '-':
+                correctAnswer = num1 - num2;
+                break;
+            case '*':
+                correctAnswer = num1 * num2;
+                break;
+        }
+
+        mathProblem.textContent = `What is ${num1} ${operator} ${num2}?`;
+    }
+
+    function checkAnswer() {
+        const userAnswer = parseInt(mathAnswer.value, 10);
+        if (userAnswer === correctAnswer) {
+            stopAlarm();
+        } else {
+            alert('Wrong answer! Please try again.');
+            mathAnswer.value = '';
+            generateMathProblem();
+        }
+    }
+
+    function snoozeAlarm() {
+      stopAlarm();
+      const now = new Date();
+      now.setMinutes(now.getMinutes() + 5);
+      alarmTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      alarmStatus.textContent = `🔁 Snoozed for 5 min: New alarm at ${alarmTime}`;
+    }
+
+    function stopAlarm() {
+      alarmSound.pause();
+      alarmSound.currentTime = 0;
+      snoozeBtn.style.display = "none";
+      stopBtn.style.display = "none";
+      mathProblemContainer.style.display = 'none';
+      mathAnswer.value = '';
+      alarmStatus.textContent = "🛑 Alarm stopped.";
+      alarmTime = null;
+    }
+
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+    });
+
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
